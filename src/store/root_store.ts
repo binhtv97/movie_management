@@ -33,7 +33,7 @@ export interface RootStore extends AppStore, HomeStore, GenreStore {
 type RootStoreKey = keyof RootStore;
 
 //If you want to add a new persistent key please add it to the PERSISTENT_KEYS
-const PERSISTENT_KEYS: RootStoreKey[] = ["category"];
+const PERSISTENT_KEYS: RootStoreKey[] = ["category", "watchList"];
 
 export const useStore = create<RootStore>()(
   persist(

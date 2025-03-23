@@ -8,13 +8,18 @@ import { ROUTE_KEY } from "@/navigation/route_key";
 import { useParams } from "@/navigation/use_params";
 import { useGetCredits } from "@/services/api_client/query/credits";
 import { useGetMovieRecommend } from "@/services/api_client/query/movie";
+import { useStore } from "@/store";
+import { parseJSONToObjectSafely } from "@/utils/utils";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, FlatList } from "react-native";
 
 const MovieDetailsScreen = ({}) => {
-  const { id } = useParams<ROUTE_KEY.Detail>();
+  const { id, item } = useParams<ROUTE_KEY.Detail>();
+  const movie: Movie = parseJSONToObjectSafely(item);
   const { data } = useGetCredits(id);
   const { data: recommend } = useGetMovieRecommend(id);
+  const { addToWatchList } = useStore();
+
   const [renderData, setRenderData] = useState<CastMember[]>([]);
   useEffect(() => {
     if (data?.cast) {
@@ -22,14 +27,16 @@ const MovieDetailsScreen = ({}) => {
       setRenderData(result);
     }
   }, [data]);
-
+  const addWatchList = () => {
+    addToWatchList(movie as Movie);
+  };
   return (
     <ScreenContainer style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
           <LogoImage />
         </View>
-        <MovieDetails id={id} crew={data?.crew} />
+        <MovieDetails id={id} crew={data?.crew} addWatchList={addWatchList} />
         <View style={styles.carouselContainer}>
           <Text style={styles.sectionTitle}>Cast Members</Text>
           <FlatList

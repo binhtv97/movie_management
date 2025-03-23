@@ -14,6 +14,7 @@ const MovieItem = ({ data }: MovieItemProps) => {
   const onItemPress = () => {
     push(ROUTE_KEY.Detail, {
       id: data.id,
+      item: JSON.stringify(data),
     });
   };
 

@@ -1,7 +1,5 @@
 import BackIcon from "@/assets/back";
 import { COLOR, COMMON_STYLE } from "@/assets/common_css";
-import { ROUTE_KEY } from "@/navigation/route_key";
-import { useParams } from "@/navigation/use_params";
 import { useRouter } from "@/navigation/use_router";
 
 import React, { useMemo } from "react";
@@ -11,12 +9,23 @@ import { FontSize, FontWeight, Text, TextColor } from "../Text";
 import { useGetMovieDetail } from "@/services/api_client/query/movie";
 import WatchListIcon from "@/assets/watchlist";
 
-const MovieDetails = ({ id, crew }: { id: number; crew?: CrewMember[] }) => {
+const MovieDetails = ({
+  id,
+  crew,
+  addWatchList,
+}: {
+  id: number;
+  crew?: CrewMember[];
+  addWatchList: () => void;
+}) => {
   const { back } = useRouter();
   const { data } = useGetMovieDetail(id);
 
   const renderData = useMemo(() => {
-    if (!data) return {};
+    if (!data)
+      return {
+        vote_average: 0,
+      };
     const baseUrl = process.env.EXPO_PUBLIC_BASE_IMAGE_URL + data?.poster_path;
 
     function convertGenresToString(
@@ -62,6 +71,9 @@ const MovieDetails = ({ id, crew }: { id: number; crew?: CrewMember[] }) => {
     };
   }, [data]);
 
+  console.log("====================================");
+  console.log(renderData);
+  console.log("====================================");
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -100,16 +112,14 @@ const MovieDetails = ({ id, crew }: { id: number; crew?: CrewMember[] }) => {
         <View style={[styles.scoreContainer, COMMON_STYLE.flex1]}>
           <View style={styles.circleContainer}>
             <Progress.Circle
-              progress={renderData?.vote_average || 0 / 10}
+              progress={renderData?.vote_average / 10}
               size={60}
               thickness={5}
               color="#00C4B4"
               unfilledColor="#333"
               borderWidth={0}
               showsText={true}
-              formatText={() =>
-                `${Math.round(renderData?.vote_average || 0 * 10)}%`
-              }
+              formatText={() => `${renderData?.vote_average * 10}%`}
               textStyle={styles.scoreText}
             />
           </View>
@@ -121,7 +131,6 @@ const MovieDetails = ({ id, crew }: { id: number; crew?: CrewMember[] }) => {
             USER SCORE
           </Text>
         </View>
-
         <View style={[styles.creditsContainer, COMMON_STYLE.flex2]}>
           {renderData?.director && renderData?.director?.length > 0 && (
             <Text style={styles.credit}>
@@ -145,7 +154,7 @@ const MovieDetails = ({ id, crew }: { id: number; crew?: CrewMember[] }) => {
       <Text style={styles.tagline}>{renderData?.tagline}</Text>
       <Text style={styles.sectionTitle}>OVERVIEW</Text>
       <Text style={styles.overview}>{renderData.overview}</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={addWatchList}>
         <WatchListIcon />
         <Text
           numberOfLines={5}

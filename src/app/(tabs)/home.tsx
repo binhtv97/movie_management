@@ -153,11 +153,9 @@ export default function HomeScreen() {
             ]}
             onPress={() => {
               setSearchText(search);
-              // navigate(ROUTE_KEY.Detail);
             }}
           />
         </View>
-
         <View style={styles.content}>
           <FlatList
             data={sortedData}
