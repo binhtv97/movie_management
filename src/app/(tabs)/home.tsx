@@ -20,7 +20,6 @@ import { useGetMovie } from "@/services/api_client/query/movie";
 import { MovieType } from "@/services/api_client/enums/movie";
 import { COLOR } from "@/assets/common_css";
 import { useRouter } from "@/navigation/use_router";
-import { ROUTE_KEY } from "@/navigation/route_key";
 import { useGetGenre } from "@/services/api_client/query/genre";
 
 export default function HomeScreen() {
