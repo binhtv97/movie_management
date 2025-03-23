@@ -7,6 +7,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
   ActivityIndicator,
+  StyleProp,
 } from "react-native";
 import { FontSize, Text, TextColor, FontWeight } from "./Text"; // Import FontWeight enum
 import { COLOR } from "@/assets/common_css";
@@ -18,7 +19,7 @@ interface Props extends Omit<TouchableOpacityProps, "disabled"> {
   disabled?: boolean;
   textClassName?: string;
   iconLeft?: boolean;
-  containerStyle?: ViewStyle;
+  containerStyle?: StyleProp<ViewStyle>;
   textColor?: TextColor;
   variantsText?: FontSize;
   fontWeight?: FontWeight; // Add fontWeight prop here
