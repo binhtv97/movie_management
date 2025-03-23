@@ -30,4 +30,12 @@ export const getDetail = async (
   });
 };
 
+export const getMovieRecommend = async (
+  id: number
+): Promise<GetMovieResponse> => {
+  return await getRequest({
+    path: API_ENDPOINT.movie.recommendations(id),
+  });
+};
+
 export const getMovieInfo = async (id: number) => {};

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getDetail, getMovie } from "../interfaces/movie/movie_service";
+import { getDetail, getMovie, getMovieRecommend } from "../interfaces/movie/movie_service";
 import { MovieType } from "../enums/movie";
 import { MovieKey } from "../queries_key/movie";
 
@@ -15,5 +15,12 @@ export const useGetMovieDetail = (id: number) => {
   return useQuery({
     queryKey: [id],
     queryFn: () => getDetail(id),
+  });
+};
+
+export const useGetMovieRecommend = (id: number) => {
+  return useQuery({
+    queryKey: [`${id}-recommend`],
+    queryFn: () => getMovieRecommend(id),
   });
 };

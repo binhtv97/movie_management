@@ -9,14 +9,11 @@ import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import * as Progress from "react-native-progress";
 import { FontSize, FontWeight, Text, TextColor } from "../Text";
 import { useGetMovieDetail } from "@/services/api_client/query/movie";
-import { useGetCredits } from "@/services/api_client/query/credits";
 import WatchListIcon from "@/assets/watchlist";
 
-const MovieDetails = ({}) => {
+const MovieDetails = ({ id, crew }: { id: number; crew?: CrewMember[] }) => {
   const { back } = useRouter();
-  const { id } = useParams<ROUTE_KEY.Detail>();
   const { data } = useGetMovieDetail(id);
-  const { data: creditData } = useGetCredits(id);
 
   const renderData = useMemo(() => {
     if (!data) return {};
@@ -45,9 +42,9 @@ const MovieDetails = ({}) => {
     }
     let director = "";
     let writer = "";
-    if (creditData?.crew) {
-      director = extractDirectorOrWriter(creditData?.crew, "Director");
-      writer = extractDirectorOrWriter(creditData?.crew, "Writer");
+    if (crew) {
+      director = extractDirectorOrWriter(crew, "Director");
+      writer = extractDirectorOrWriter(crew, "Writer");
     }
     return {
       baseUrl,
@@ -145,12 +142,9 @@ const MovieDetails = ({}) => {
           )}
         </View>
       </View>
-
       <Text style={styles.tagline}>{renderData?.tagline}</Text>
-
       <Text style={styles.sectionTitle}>OVERVIEW</Text>
       <Text style={styles.overview}>{renderData.overview}</Text>
-
       <TouchableOpacity style={styles.button}>
         <WatchListIcon />
         <Text

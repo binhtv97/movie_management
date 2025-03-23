@@ -10,6 +10,7 @@ export const API_ENDPOINT = {
         key
       )}&include_adult=false&language=vn-es&page=${page}`,
     credit: (id: number) => `3/movie/${id}/credits?language=en-US`,
+    recommendations: (id: number) => `3/movie/${id}/recommendations`,
   },
   genre: "3/genre/movie/list?language=en",
 };
