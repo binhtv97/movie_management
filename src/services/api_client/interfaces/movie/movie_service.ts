@@ -21,3 +21,13 @@ export const getMovie = async (
     path: path,
   });
 };
+
+export const getDetail = async (
+  id: number
+): Promise<GetMovieDetailResponse> => {
+  return await getRequest({
+    path: API_ENDPOINT.movie.detail(id),
+  });
+};
+
+export const getMovieInfo = async (id: number) => {};

@@ -1,14 +1,24 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Pressable } from "react-native";
 import { FontSize, FontWeight, Text, TextColor } from "../Text";
+import { useRouter } from "@/navigation/use_router";
+import { ROUTE_KEY } from "@/navigation/route_key";
 
 interface MovieItemProps {
   data: Movie;
 }
 const MovieItem = ({ data }: MovieItemProps) => {
   const baseUrl = process.env.EXPO_PUBLIC_BASE_IMAGE_URL + data.poster_path;
+  const { push } = useRouter();
+
+  const onItemPress = () => {
+    push(ROUTE_KEY.Detail, {
+      id: data.id,
+    });
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onItemPress}>
       <Image source={{ uri: baseUrl }} style={styles.image} />
       <View style={styles.content}>
         <Text
@@ -31,7 +41,7 @@ const MovieItem = ({ data }: MovieItemProps) => {
           {data.overview}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

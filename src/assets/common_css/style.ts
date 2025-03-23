@@ -4,6 +4,9 @@ export const COMMON_STYLE = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  flex2: {
+    flex: 2,
+  },
   paddingTop20: {
     paddingTop: 20,
   },

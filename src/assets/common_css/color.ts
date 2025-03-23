@@ -11,4 +11,5 @@ export const COLOR = {
   disable_text: "#00000080",
   item_text: "#FFFFFF",
   background: "#FFFFFF",
+  dark_blue: "#042541",
 };

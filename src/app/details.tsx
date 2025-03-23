@@ -1,47 +1,23 @@
-import { Text } from "@/components/Text";
+import LogoImage from "@/assets/logo";
+import { ScreenContainer } from "@/components/Container";
+import MovieDetails from "@/components/movie/MovideDetail";
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-// import Header from "./Header";
-// import MovieInfo from "./MovieInfo";
-// import UserScore from "./UserScore";
-// import CrewInfo from "./CrewInfo";
-// import Tagline from "./Tagline";
-// import Overview from "./Overview";
-// import CastList from "./CastList";
-// import RecommendationsList from "./RecommendationsList";
-// import NavigationBar from "./NavigationBar";
+import { View, StyleSheet, ScrollView } from "react-native";
 
 const MovieDetailsScreen = ({}) => {
   return (
-    <View style={styles.container}>
-      <Text>Detail</Text>
-      {/* <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.movieDetails}>
-          <Header navigation={navigation} />
-          <MovieInfo
-            title={movie.title}
-            posterUrl={movie.posterUrl}
-            rating={movie.rating}
-            releaseDate={movie.releaseDate}
-            runtime={movie.runtime}
-            genres={movie.genres}
-            status={movie.status}
-            language={movie.language}
-          />
-          <View style={styles.scoreAndCrew}>
-            <UserScore score={movie.userScore} />
-            <CrewInfo director={movie.director} writer={movie.writer} />
-          </View>
-          <Tagline tagline={movie.tagline} />
-          <Overview overview={movie.overview} />
+    <ScreenContainer style={styles.container}>
+      <ScrollView>
+        <View style={styles.header}>
+          <LogoImage />
         </View>
-        <View style={styles.whiteSection}>
-          <CastList cast={movie.cast} />
-          <RecommendationsList recommendations={movie.recommendations} />
+        <View>
+          <View>
+            <MovieDetails />
+          </View>
         </View>
       </ScrollView>
-      <NavigationBar navigation={navigation} /> */}
-    </View>
+    </ScreenContainer>
   );
 };
 
@@ -50,22 +26,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  scrollContent: {
-    paddingBottom: 60, // Height of NavigationBar
-  },
-  movieDetails: {
-    backgroundColor: "#00C4FF",
-    padding: 10,
-  },
-  scoreAndCrew: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  header: {
     alignItems: "center",
-    marginVertical: 10,
-  },
-  whiteSection: {
-    backgroundColor: "#fff",
-    padding: 10,
+    height: 60,
+    justifyContent: "center",
   },
 });
 

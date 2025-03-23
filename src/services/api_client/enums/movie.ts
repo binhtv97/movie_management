@@ -3,7 +3,3 @@ export enum MovieType {
   POPULAR = "popular",
   UPCOMING = "upcoming",
 }
-
-export enum SortType{
-  
-}

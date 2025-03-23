@@ -8,6 +8,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ROUTE_KEY } from "@/navigation/route_key";
+import WatchListIcon from "@/assets/watchlist";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -41,9 +42,7 @@ export default function TabLayout() {
         name={ROUTE_KEY.WatchList}
         options={{
           title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <WatchListIcon />,
         }}
       />
     </Tabs>

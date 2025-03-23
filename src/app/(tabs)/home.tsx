@@ -21,9 +21,10 @@ import { MovieType } from "@/services/api_client/enums/movie";
 import { COLOR } from "@/assets/common_css";
 import { useRouter } from "@/navigation/use_router";
 import { ROUTE_KEY } from "@/navigation/route_key";
+import { useGetGenre } from "@/services/api_client/query/genre";
 
 export default function HomeScreen() {
-  const { category, setCategory } = useStore();
+  const { category, setCategory, setGenre } = useStore();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -39,6 +40,8 @@ export default function HomeScreen() {
   });
 
   const { data, isLoading } = useGetMovie(filmType, page);
+  const { data: genreData } = useGetGenre();
+
   const [dataRender, setDataRender] = useState<Movie[]>([]);
   const [filteredData, setFilteredData] = useState<Movie[]>([]);
 
@@ -55,6 +58,12 @@ export default function HomeScreen() {
   const onSortPress = (value: string) => {
     setSortBy(value);
   };
+
+  useEffect(() => {
+    if (genreData) {
+      setGenre(genreData.genres);
+    }
+  }, [genreData]);
 
   const onLoadMore = () => {
     if (page < totalPage) setPage((prevPage) => prevPage + 1);
@@ -143,8 +152,8 @@ export default function HomeScreen() {
               search.length > 0 && styles.activeButton,
             ]}
             onPress={() => {
-              // setSearchText(search);
-              navigate(ROUTE_KEY.Detail)
+              setSearchText(search);
+              // navigate(ROUTE_KEY.Detail);
             }}
           />
         </View>

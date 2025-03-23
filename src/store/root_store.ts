@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { mmkvStorage } from "./local-storage/mmkv";
 import { AppStore, createAppSlice } from "./app_store";
 import { HomeStore, createHomeSlice } from "./home_store";
+import { GenreStore, createGenreSlice } from "./genre_store";
 
 const dataStorage: StateStorage = {
   getItem: async (key) => {
@@ -24,7 +25,7 @@ const dataStorage: StateStorage = {
   },
 };
 
-export interface RootStore extends AppStore, HomeStore {
+export interface RootStore extends AppStore, HomeStore, GenreStore {
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
 }
@@ -37,6 +38,7 @@ const PERSISTENT_KEYS: RootStoreKey[] = ["category"];
 export const useStore = create<RootStore>()(
   persist(
     (...a) => ({
+      ...createGenreSlice(...a),
       ...createHomeSlice(...a),
       ...createAppSlice(...a),
       _hasHydrated: false,
