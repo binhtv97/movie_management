@@ -4,6 +4,7 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import LogoImage from "@/assets/logo";
 import { Button } from "@/components/Button";
@@ -18,11 +19,17 @@ import { useEffect, useState } from "react";
 import { useGetMovie } from "@/services/api_client/query/movie";
 import { MovieType } from "@/services/api_client/enums/movie";
 import { COLOR } from "@/assets/common_css";
+import { useRouter } from "@/navigation/use_router";
+import { ROUTE_KEY } from "@/navigation/route_key";
 
 export default function HomeScreen() {
   const { category, setCategory } = useStore();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const { navigate } = useRouter();
+
   const [sortBy, setSortBy] = useState<string>(SORT_BY_DATA[0]);
   const [filmType, setFilmType] = useState(() => {
     if (category === CATEGORY_DATA[0]) return MovieType.NOW_PLAYING;
@@ -33,6 +40,7 @@ export default function HomeScreen() {
 
   const { data, isLoading } = useGetMovie(filmType, page);
   const [dataRender, setDataRender] = useState<Movie[]>([]);
+  const [filteredData, setFilteredData] = useState<Movie[]>([]);
 
   const onCategoryPress = (value: string) => {
     setCategory(value);
@@ -41,6 +49,7 @@ export default function HomeScreen() {
     if (value === CATEGORY_DATA[2]) setFilmType(MovieType.POPULAR);
     setPage(1);
     setDataRender([]);
+    setFilteredData([]);
   };
 
   const onSortPress = (value: string) => {
@@ -70,7 +79,11 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (data?.results) {
-      const tmpData = [...dataRender, ...data.results];
+      const newData = data.results.filter(
+        (movie) =>
+          !dataRender.some((existingMovie) => existingMovie.id === movie.id)
+      );
+      const tmpData = [...dataRender, ...newData];
       setDataRender(tmpData);
     }
     if (data?.total_pages) {
@@ -78,7 +91,22 @@ export default function HomeScreen() {
     }
   }, [data]);
 
-  const sortedData = sortData(dataRender);
+  useEffect(() => {
+    if (!searchText) {
+      setFilteredData(dataRender);
+      return;
+    }
+
+    const filteredMovies = dataRender.filter(
+      (movie) =>
+        movie.original_title.toLowerCase().includes(searchText.toLowerCase()) ||
+        movie.overview.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    setFilteredData(filteredMovies);
+  }, [searchText, dataRender]);
+
+  const sortedData = sortData(filteredData);
 
   return (
     <ScreenContainer>
@@ -101,11 +129,23 @@ export default function HomeScreen() {
             initData={sortBy}
             onItemSelect={onSortPress}
           />
-          <Input placeholder="Search..." />
+          <Input
+            placeholder="Search..."
+            defaultValue={search}
+            onChangeText={setSearch}
+          />
           <Button
             label="Search"
-            textColor={TextColor.DISABLE}
-            containerStyle={styles.button}
+            textColor={search.length > 0 ? TextColor.WHITE : TextColor.DISABLE}
+            fontWeight={FontWeight.MEDIUM}
+            containerStyle={[
+              styles.button,
+              search.length > 0 && styles.activeButton,
+            ]}
+            onPress={() => {
+              // setSearchText(search);
+              navigate(ROUTE_KEY.Detail)
+            }}
           />
         </View>
 
@@ -115,7 +155,7 @@ export default function HomeScreen() {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <MovieItem data={item} />}
             ListFooterComponent={
-              data?.results && (
+              sortedData.length > 0 && page < totalPage ? (
                 <Button
                   label="Load More"
                   textColor={TextColor.WHITE}
@@ -125,9 +165,12 @@ export default function HomeScreen() {
                   onPress={onLoadMore}
                   loading={isLoading}
                 />
+              ) : (
+                <></>
               )
             }
             contentContainerStyle={styles.flatListContent}
+            ListEmptyComponent={isLoading ? <ActivityIndicator /> : null}
           />
         </View>
       </KeyboardAvoidingView>
@@ -162,5 +205,8 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingBottom: 60,
+  },
+  activeButton: {
+    backgroundColor: COLOR.select_option,
   },
 });
